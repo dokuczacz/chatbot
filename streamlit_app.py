@@ -55,7 +55,6 @@ def call_backend(endpoint: str, payload: dict) -> dict:
         "Content-Type": "application/json"
     }
     try:
-        # FIX: Don't append endpoint twice - BACKEND_URL already includes /api
         url = f"{BACKEND_URL}/{endpoint}"
         response = requests.post(url, json=payload, headers=headers, timeout=30)
         response.raise_for_status()
@@ -77,7 +76,7 @@ def send_to_llm(messages: list) -> str:
     if "response" in result:
         st.session_state.thread_id = result.get("thread_id")
         return result["response"]
-    return f"Error: {result.get('error', 'Unknown error')}"
+    return "Error communicating with assistant"
 
 def get_file_stats():
     """Get statistics for all user files"""
