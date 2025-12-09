@@ -6,6 +6,7 @@ import os
 
 # === CONFIGURATION ===
 BACKEND_URL = "https://agentbackendservice-dfcpcudzeah4b6ae.northeurope-01.azurewebsites.net/api"
+FUNCTION_KEY = os.environ.get("AZURE_FUNCTION_KEY", "")
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 # Set page config
@@ -55,7 +56,8 @@ def call_backend(endpoint: str, payload: dict) -> dict:
         "Content-Type": "application/json"
     }
     try:
-        url = f"{BACKEND_URL}/{endpoint}"
+        # Include function key for authentication
+        url = f"{BACKEND_URL}/{endpoint}?code={FUNCTION_KEY}"
         response = requests.post(url, json=payload, headers=headers, timeout=30)
         response.raise_for_status()
         return response.json()
